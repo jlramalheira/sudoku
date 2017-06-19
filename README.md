@@ -1,2 +1,3 @@
-# sudoku
-Sudoku Solver with graph coloring
+# Sudoku
+
+Sudoku Solvers with graph coloring.
