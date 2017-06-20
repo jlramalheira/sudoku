@@ -63,7 +63,20 @@ def sequencial_coloring(graph):
     Arguments:
         graph (networkx.Graph): a graph.
     """
-    raise NotImplementedError('')
+
+    def is_label_possible(graph, node, label):
+        for neighbor in graph.neighbors(node):
+            if graph.node[neighbor]['label'] == label:
+                return False
+        return True
+
+    size = int(sqrt(len(graph.node)))
+    labels = [(x + 1) for x in range(size)]
+    for label in labels:
+        for node in graph.node:
+            if is_label_possible(graph, node, label):
+                graph.node[node]['label'] = label
+    return graph
 
 
 def class_coloring(graph):
