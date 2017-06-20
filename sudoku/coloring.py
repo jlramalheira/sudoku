@@ -81,4 +81,18 @@ def dsatur(graph):
     Arguments:
         graph (networkx.Graph): a graph.
     """
-    raise NotImplementedError('')
+    def _saturation(graph):
+        for node in graph.node:
+            if not graph.node[node]['fixed']:
+                for neighbor in graph.neighbors(node):
+                    if (graph.node[neighbor]['fixed']):
+                        graph.node[node]['label'].add(
+                            graph.node[neighbor]['label'])
+
+    for node in graph.node:
+        if (graph.node[node]['label'] is None):
+            graph.node[node]['label'] = set()
+
+    _saturation(graph)
+    for node in graph.node:
+        print (graph.node['label'])
