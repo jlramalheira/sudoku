@@ -3,7 +3,6 @@
 import networkx as nx
 from math import sqrt
 
-
 def welsh_powell(graph):
     """Runs the Welsh-Powell algorithm to color a graph.
 
@@ -85,7 +84,30 @@ def class_coloring(graph):
     Arguments:
         graph (networkx.Graph): a graph.
     """
-    raise NotImplementedError('')
+    size = int(sqrt(len(graph.node)))
+    classes = [set() for x in range(size)]
+    candidates = []
+
+    for node in graph.node:
+        if graph.node[node]['fixed']:
+            classes[graph.node[node]['label'] - 1].add(node)
+        else:
+            candidates.append(node)
+    
+    while len(candidates) != 0:
+        v = candidates.pop()
+        for i in range(len(classes)):
+            neigh_set = set(graph.neighbors(v))
+            if len(classes[i].intersection(neigh_set)) == 0:
+                classes[i].add(v)
+                graph.node[v]['label'] = i + 1
+                break            
+
+    for i in range(9):
+        for j in range(9):
+            print (graph.node['{}{}'.format(i,j)]['label'],end=' ')
+        print()
+    #raise NotImplementedError('')
 
 
 def dsatur(graph):
