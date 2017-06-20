@@ -26,9 +26,13 @@ class IoTests(unittest.TestCase):
         filepath = os.path.join(
             os.path.dirname(__file__),
             '../rsc/sample-1.sdk')
-        graph = sudoku.io.read(filepath)
         nx.draw_circular(graph)
+        graph = sudoku.io.read(filepath)
         plt.show()
 
     def test_write(self):
-        raise NotImplementedError('')
+        filepath = os.path.join(
+            os.path.dirname(__file__),
+            '../rsc/sample-1.sdk')
+        graph = sudoku.io.read(filepath)
+        sudoku.io.print(graph)
