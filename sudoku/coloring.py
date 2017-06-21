@@ -84,31 +84,85 @@ def class_coloring(graph):
     Arguments:
         graph (networkx.Graph): a graph.
     """
+
+    def _init_classes_and_candidates(graph,classes,candidates):
+        for node in graph.node:
+            if graph.node[node]['fixed']:
+                classes[graph.node[node]['label'] - 1].add(node)
+            else:
+                candidates.append(node)
+    
+    def _coloring(graph,candidates,classes):
+        while len(candidates) != 0:
+            v = candidates.pop()
+            for i in range(len(classes)):
+                neigh_set = set(graph.neighbors(v))
+                if len(classes[i].intersection(neigh_set)) == 0:
+                    classes[i].add(v)
+                    graph.node[v]['label'] = i + 1
+                    break    
+
     size = int(sqrt(len(graph.node)))
     classes = [set() for x in range(size)]
     candidates = []
+    _init_classes_and_candidates(graph,classes,candidates)
+    _coloring(graph,candidates,classes)
 
-    for node in graph.node:
-        if graph.node[node]['fixed']:
-            classes[graph.node[node]['label'] - 1].add(node)
-        else:
-            candidates.append(node)
+    return graph
 
-    while len(candidates) != 0:
-        v = candidates.pop()
-        for i in range(len(classes)):
-            neigh_set = set(graph.neighbors(v))
-            if len(classes[i].intersection(neigh_set)) == 0:
-                classes[i].add(v)
-                graph.node[v]['label'] = i + 1
-                break
+def class_coloring_backtracking(graph):
+    """Runs the Class Coloring Backtracking algorithm to color a graph.
 
-    for i in range(9):
-        for j in range(9):
-            print (graph.node['{}{}'.format(i,j)]['label'],end=' ')
-        print()
+    Arguments:
+        graph (networkx.Graph): a graph.
+    """
+    def _candidate_was_colored(graph,node):
+        return graph.node[node]['label'] != None
+
+    def _remove_from_class(last_colored,classes):
+        for c in classes:
+            if last_colored in c:
+                c.remove(last_colored)
+
+    def _init_classes_and_candidates(graph, classes, candidates):
+        for node in graph.node:
+            if graph.node[node]['fixed']:
+                classes[graph.node[node]['label'] - 1].add(node)
+            else:
+                candidates.append(node)
+
+    def _coloring(graph, candidates, classes, colored_stack):
+        while len(candidates) != 0:
+            v = candidates.pop()
+            init_index = 0 if type(graph.node[v]['label']) != int else graph.node[v]['label']
+            graph.node[v]['label'] = None
+            for i in range(init_index,len(classes)):
+                neigh_set = set(graph.neighbors(v))
+                if len(classes[i].intersection(neigh_set)) == 0:
+                    classes[i].add(v)
+                    graph.node[v]['label'] = i + 1
+                    colored_stack.append(v)
+                    break    
+            if not _candidate_was_colored(graph,v):
+                candidates.append(v)
+                last_colored = colored_stack.pop()
+                _remove_from_class(last_colored,classes)
+                candidates.append(last_colored)
+
+    size = int(sqrt(len(graph.node)))
+    classes = [set() for x in range(size)]
+    candidates = []
+    colored_stack = []
+    _init_classes_and_candidates(graph,classes,candidates)
+    _coloring(graph,candidates,classes,colored_stack)
+    
+    #for i in range(9):
+    #    for j in range(9):
+    #        print (graph.node['{}{}'.format(i,j)]['label'],end=' ')
+    #    print()
     #raise NotImplementedError('')
 
+    return graph
 
 def dsatur(graph):
     """Runs the Degree of Saturation heuristic algorithm to color a graph.

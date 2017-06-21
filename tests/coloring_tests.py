@@ -19,6 +19,13 @@ class ColoringTests(unittest.TestCase):
             '../rsc/sample-2.sdk')
         graph = sudoku.io.read(filepath)
         graph_solved = sudoku.coloring.class_coloring(graph)
+    
+    def test_class_coloring_backtracking(self):
+        filepath = os.path.join(
+            os.path.dirname(__file__),
+            '../rsc/sample-2.sdk')
+        graph = sudoku.io.read(filepath)
+        graph_solved = sudoku.coloring.class_coloring_backtracking(graph)
 
     def test_dsatur(self):
         filepath = os.path.join(
