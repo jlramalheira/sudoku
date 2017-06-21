@@ -80,7 +80,7 @@ def class_coloring(graph):
             classes[graph.node[node]['label'] - 1].add(node)
         else:
             candidates.append(node)
-    
+
     while len(candidates) != 0:
         v = candidates.pop()
         for i in range(len(classes)):
@@ -88,7 +88,7 @@ def class_coloring(graph):
             if len(classes[i].intersection(neigh_set)) == 0:
                 classes[i].add(v)
                 graph.node[v]['label'] = i + 1
-                break            
+                break
 
     for i in range(9):
         for j in range(9):
@@ -104,17 +104,48 @@ def dsatur(graph):
         graph (networkx.Graph): a graph.
     """
     def _saturation(graph):
+        candidates = 0
         for node in graph.node:
             if not graph.node[node]['fixed']:
+                candidates+=1
                 for neighbor in graph.neighbors(node):
                     if (graph.node[neighbor]['fixed']):
+                        graph.node[node]['label'].add(
+                            graph.node[neighbor]['label'])
+        return candidates
+
+    def _find_highest_saturation(graph):
+        highest_saturation = -1
+        for node in graph.node:
+            if (not graph.node[node]['fixed'] and
+                    type(graph.node[node]['label']) is not int):
+                        if (len(graph.node[node]['label']) > highest_saturation):
+                            highest_saturation = len(graph.node[node]['label'])
+                            highest_node = graph.node[node]
+        return highest_node
+
+    def _find_smallest_color(graph,node):
+        size = int(sqrt(len(graph.node)))
+        for i in range(1,size+1):
+            if not (i in node['label']):
+                return i
+
+    def _update_saturation(graph):
+        for node in graph.node:
+            if (not graph.node[node]['fixed'] and type(graph.node[node]['label']) is not int):
+                graph.node[node]['label'] = set()
+                for neighbor in graph.neighbors(node):
+                    if (graph.node[neighbor]['fixed'] or type(graph.node[neighbor]['label']) is int):
                         graph.node[node]['label'].add(
                             graph.node[neighbor]['label'])
 
     for node in graph.node:
         if (graph.node[node]['label'] is None):
             graph.node[node]['label'] = set()
-
-    _saturation(graph)
-    for node in graph.node:
-        print (graph.node['label'])
+    candidates = _saturation(graph)
+    while(candidates>0):
+        highest_node = _find_highest_saturation(graph)
+        color = _find_smallest_color(graph,highest_node)
+        highest_node['label'] = color
+        _update_saturation(graph)
+        candidates-=1
