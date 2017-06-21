@@ -13,7 +13,6 @@ class ColoringTests(unittest.TestCase):
         graph = sudoku.io.read(filepath)
         graph_solved = sudoku.coloring.welsh_powell(graph)
 
-
     def test_class_coloring(self):
         filepath = os.path.join(
             os.path.dirname(__file__),
