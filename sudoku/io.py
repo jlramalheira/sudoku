@@ -2,6 +2,7 @@
 
 from os import path
 from math import sqrt
+import sys
 import networkx as nx
 
 
@@ -25,14 +26,27 @@ def read(filepath):
         raise IOError('The file of the path doesn\'t exists.')
 
 
-def persist(filepath, sudoku):
-    """Persists a sudoku instance in a file.
+def serialize(output_file, graph):
+    """Serialize a sudoku instance in a file.
 
     Arguments:
         filepath (str): the path of the file.
-        sudoku (networkx.Graph): the graph representation of the sudoku.
+        graph (networkx.Graph): the graph representation of the sudoku.
     """
-    raise NotImplementedError('')
+    size = int(sqrt(len(graph.node)))
+    for i in range(size):
+        labels = [graph.node[str(i) + str(j)]['label'] for j in range(size)]
+        row = [str(l) if l is not None else '0' for l in labels]
+        output_file.write(' '.join(row) + '\n')
+
+
+def print(graph):
+    """Prints the sudoku instance into the standard output.
+
+    Arguments:
+        graph (networkx.Graph): the graph representation of the sudoku.
+    """
+    serialize(sys.stdout, graph)
 
 
 def _build_sudoku_instance_graph(elements):
