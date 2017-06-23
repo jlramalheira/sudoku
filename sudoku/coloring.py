@@ -2,6 +2,8 @@
 
 import networkx as nx
 from math import sqrt
+from queue import *
+import random
 
 def welsh_powell(graph):
     """Runs the Welsh-Powell algorithm to color a graph.
@@ -156,10 +158,6 @@ def class_coloring_backtracking(graph):
     _init_classes_and_candidates(graph,classes,candidates)
     _coloring(graph,candidates,classes,colored_stack)
     
-    #for i in range(9):
-    #    for j in range(9):
-    #        print (graph.node['{}{}'.format(i,j)]['label'],end=' ')
-    #    print()
     #raise NotImplementedError('')
 
     return graph
@@ -216,3 +214,135 @@ def dsatur(graph):
         highest_node['label'] = color
         _update_saturation(graph)
         candidates-=1
+
+def bfs_heuristic(graph,max_iterations):
+    """Runs the Breadth First Search heuristic algorithm to color a graph.
+
+    Arguments:
+        graph (networkx.Graph): a graph.
+    """
+    def _clear(graph):
+        for node in graph.node:
+            if not graph.node[node]['fixed']:
+                graph.node[node]['label'] = None
+
+    def _is_possible_color(graph,nodes,color):
+        for node in nodes:
+            if graph.node[node]['label'] == color:
+                return False
+        return True
+
+    def _coloring(graph,node):
+        size = int(sqrt(len(graph.node)))
+        colors = []
+        for i in range(size):
+            if _is_possible_color(graph,graph.neighbors(node),i+1):
+                colors.append(i+1)
+        if len(colors) > 0:
+            r = random.SystemRandom()
+            graph.node[node]['label'] = r.choice(colors)
+            return True
+        return False
+
+
+    def _bfs(graph,node):
+        q = Queue()
+        if not graph.node[node]['fixed']:
+            if not _coloring(graph,node):
+                return
+        q.put(node)
+        while not q.empty():
+            v = q.get()
+            neighbors = graph.neighbors(v)
+            for neighbor in neighbors:
+                if graph.node[neighbor]['label'] == None:
+                    if not _coloring(graph,neighbor):
+                        return
+                    q.put(neighbor)
+
+    def _is_valid_solution(graph):
+        for node in graph.node:
+            if graph.node[node]['label'] == None:
+                return False
+        return True
+
+    for i in range(max_iterations):
+        r = random.SystemRandom()
+        _bfs(graph,r.choice(graph.nodes()))
+        if _is_valid_solution(graph):
+            break
+        else:
+            _clear(graph)
+    
+    for i in range(9):
+        for j in range(9):
+            print (graph.node['{}{}'.format(i,j)]['label'],end=' ')
+        print()
+
+    return graph
+
+def dfs_heuristic(graph,max_iterations):
+    """Runs the Depth First Search heuristic algorithm to color a graph.
+
+    Arguments:
+        graph (networkx.Graph): a graph.
+    """
+    def _clear(graph):
+        for node in graph.node:
+            if not graph.node[node]['fixed']:
+                graph.node[node]['label'] = None
+
+    def _is_possible_color(graph,nodes,color):
+        for node in nodes:
+            if graph.node[node]['label'] == color:
+                return False
+        return True
+
+    def _coloring(graph,node):
+        size = int(sqrt(len(graph.node)))
+        colors = []
+        for i in range(size):
+            if _is_possible_color(graph,graph.neighbors(node),i+1):
+                colors.append(i+1)
+        if len(colors) > 0:
+            r = random.SystemRandom()
+            graph.node[node]['label'] = r.choice(colors)
+            return True
+        return False
+
+
+    def _dfs(graph,node):
+        stack = []
+        if not graph.node[node]['fixed']:
+            if not _coloring(graph,node):
+                return
+        stack.append(node)
+        while not len(stack) == 0:
+            v = stack.pop()
+            neighbors = graph.neighbors(v)
+            for neighbor in neighbors:
+                if graph.node[neighbor]['label'] == None:
+                    if not _coloring(graph,neighbor):
+                        return
+                    stack.append(neighbor)
+
+    def _is_valid_solution(graph):
+        for node in graph.node:
+            if graph.node[node]['label'] == None:
+                return False
+        return True
+
+    for i in range(max_iterations):
+        r = random.SystemRandom()
+        _dfs(graph,r.choice(graph.nodes()))
+        if _is_valid_solution(graph):
+            break
+        else:
+            _clear(graph)
+    
+    for i in range(9):
+        for j in range(9):
+            print (graph.node['{}{}'.format(i,j)]['label'],end=' ')
+        print()
+
+    return graph

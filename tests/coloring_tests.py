@@ -33,3 +33,19 @@ class ColoringTests(unittest.TestCase):
             '../rsc/sample-2.sdk')
         graph = sudoku.io.read(filepath)
         graph_solved = sudoku.coloring.dsatur(graph)
+
+    def test_bfs_heuristic(self):
+        filepath = os.path.join(
+            os.path.dirname(__file__),
+            '../rsc/sample-2.sdk')
+        graph = sudoku.io.read(filepath)
+        max_iterations = 100000
+        graph_solved = sudoku.coloring.bfs_heuristic(graph,max_iterations)
+
+    def test_dfs_heuristic(self):
+        filepath = os.path.join(
+            os.path.dirname(__file__),
+            '../rsc/sample-2.sdk')
+        graph = sudoku.io.read(filepath)
+        max_iterations = 100000
+        graph_solved = sudoku.coloring.dfs_heuristic(graph,max_iterations)
