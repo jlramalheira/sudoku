@@ -209,9 +209,12 @@ def dsatur(graph):
     while(candidates>0):
         highest_node = _find_highest_saturation(graph)
         color = _find_smallest_color(graph,highest_node)
-        graph.node[highest_node]['label'] = color
-        _update_saturation(graph,highest_node)
-        candidates-=1
+        if(color != None):
+            graph.node[highest_node]['label'] = color
+            _update_saturation(graph,highest_node)
+            candidates-=1
+        else:
+            break
     return graph
 
 def bfs_heuristic(graph,max_iterations):

@@ -30,7 +30,7 @@ class ColoringTests(unittest.TestCase):
     def test_dsatur(self):
         filepath = os.path.join(
             os.path.dirname(__file__),
-            '../rsc/9/sample-1.sdk')
+            '../rsc/9/solved-0.sdk')
         graph = sudoku.io.read(filepath)
         graph_solved = sudoku.coloring.dsatur(graph)
 
