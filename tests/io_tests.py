@@ -10,7 +10,7 @@ class IoTests(unittest.TestCase):
     def test_read(self):
         filepath = os.path.join(
             os.path.dirname(__file__),
-            '../rsc/sample-1.sdk')
+            '../rsc/9/sample-1.sdk')
         graph = sudoku.io.read(filepath)
         order = int(math.pow(len(graph.node), 1 / 4))
         node_degree = (3 * (order ** 2)) - (2 * (order - 1)) - 3
@@ -25,7 +25,7 @@ class IoTests(unittest.TestCase):
     def test_read_draw(self):
         filepath = os.path.join(
             os.path.dirname(__file__),
-            '../rsc/sample-1.sdk')
+            '../rsc/9/sample-1.sdk')
         nx.draw_circular(graph)
         graph = sudoku.io.read(filepath)
         plt.show()
@@ -33,6 +33,6 @@ class IoTests(unittest.TestCase):
     def test_write(self):
         filepath = os.path.join(
             os.path.dirname(__file__),
-            '../rsc/sample-1.sdk')
+            '../rsc/9/sample-1.sdk')
         graph = sudoku.io.read(filepath)
         sudoku.io.print(graph)
