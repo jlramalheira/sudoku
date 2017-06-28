@@ -50,7 +50,7 @@ def welsh_powell(graph):
         if (graph.node[node]['label'] is None):
             graph.node[node]['label'] = [(x + 1) for x in range(size)]
 
-    for i in range(9):
+    for i in range(size):
         _engage(graph)
         _welsh(graph)
         _update(graph)
